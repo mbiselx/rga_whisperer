@@ -35,6 +35,10 @@ class MessageParser:
         self.ptr = 0
         '''internal pointer used for parsing. do not touch!'''
 
+    def is_done(self) -> bool:
+        '''has all data in the parser been taken care of?'''
+        return self.ptr >= len(self.data)
+
     def get_bytes(self, size=4, pad=False) -> bytes:
         b = self.data[self.ptr: self.ptr + size]
         self.ptr += size
