@@ -32,7 +32,6 @@ class DataStreamMessage(Message, type_code=0x00040000):
 
             is_array = bool(dtype & DTYPE_ARRAY_BITMASK)
             dtype_code = DTYPE_LOOKUP[dtype & ~DTYPE_ARRAY_BITMASK]
-            print(is_array, dtype & ~DTYPE_ARRAY_BITMASK, dtype_code)
 
             if is_array:
                 _ = parser.get_bytes(2)  # always pad
