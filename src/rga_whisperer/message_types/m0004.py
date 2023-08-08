@@ -42,7 +42,7 @@ class DataStreamMessage(Message, type_code=0x00040000):
                     dtype_code = 'xx'+dtype_code  # prepend two padding bytes
                 elif dsize < 2:
                     dtype_code += 'x'  # append a padding byte
-                value = parser.get_value(dtype_code)
+                value = parser.get_value(dtype_code)[0]
 
             quality = parser.get_int(2)
             _ = parser.get_bytes(2)  # ??

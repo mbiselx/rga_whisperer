@@ -10,6 +10,8 @@ __all__ = [
     "BrowseResponseMessage",
     "BindRequestMessage",
     "BindResponseMessage",
+    "COMInitiateMessage",
+    "COMResponseMessage",
 ]
 
 
@@ -31,7 +33,8 @@ class BrowseRequestMessage(Message, type_code=0x00020200):
 
     def pack_contents(self) -> bytes:
         return MessagePacker.make_str(self.item_name) + \
-            MessagePacker.make_int(self.request_type, 12)
+            MessagePacker.make_int(self.request_type, 12) + \
+            bytes(16)
 
 
 @dataclass
@@ -113,9 +116,9 @@ class BrowseResponseMessage(Message, type_code=0x00020201):
 
     @classmethod
     def parse(cls, header: Message.MessageHeader, parser: MessageParser):
-        _ = parser.get_bytes(8)
+        _ = parser.get_bytes(12)
 
-        nb_items = parser.get_int(8)
+        nb_items = parser.get_int()
         items = [cls.BrowseItems.parse(parser) for _ in range(nb_items)]
 
         return cls(
@@ -200,7 +203,7 @@ class COMInitiateMessage(Message, type_code=0x00020800):
 
 
 @dataclass
-class COMRespondMessage(Message, type_code=0x00020801):
+class COMResponseMessage(Message, type_code=0x00020801):
     data: bytes
 
     @classmethod

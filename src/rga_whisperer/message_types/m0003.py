@@ -48,7 +48,7 @@ class UK_Request_1_Message(Message, type_code=0x00030100):
 class UK_Response_1_Message(Message, type_code=0x00030101):
     @dataclass
     class ResponseObject:
-        ref: bytes
+        ref: int
         dtype: int
         permission: int
 

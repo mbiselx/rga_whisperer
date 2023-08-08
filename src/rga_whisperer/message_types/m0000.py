@@ -35,12 +35,12 @@ class MessageBase():
         return super().__init_subclass__()
 
     @staticmethod
-    def register_subclass(cls: 'type[MessageBase]', type_code=None) -> None:
+    def register_subclass(subcls: 'type[MessageBase]', type_code: int) -> None:
         '''
         register a subclass to the central registry, so it can
         be accessesd at any time from anywhere
         '''
-        __class__.TYPE_CODE_REGISTRY[type_code] = cls
+        __class__.TYPE_CODE_REGISTRY[type_code] = subcls
 
 
 @dataclass
@@ -68,6 +68,7 @@ class Message(MessageBase, ABC):
     '''the header of the message. This is common to all messages'''
 
     @abstractclassmethod
+    @classmethod
     def parse(cls, header: 'Message.MessageHeader', parser: MessageParser):
         '''parse the raw data into a message'''
         raise NotImplementedError(
@@ -84,6 +85,7 @@ class Message(MessageBase, ABC):
         if id:
             self.header.id = id
         self.header.length = len(packed_msg) + 16
+        self.header.type_code = self.type_code
         return self.header.pack() + packed_msg
 
 

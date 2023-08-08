@@ -20,3 +20,10 @@ classifiers = [
 dependencies = [
   "scapy",
 ]
+
+[project.optional-dependencies]
+test = [
+    "autopep8",
+    "flake8",
+    "pytest"
+]
