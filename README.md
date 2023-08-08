@@ -10,6 +10,17 @@ OPC DA was developed to make use of Microsoft’s COM / DCOM technology. However
 
 Once this has been set up, the TCP traffic can be sniffed live using this library, or saved to a PCAP file (e.g. using [Wireshark](https://www.wireshark.org/)) and read later using this library. 
 
+## Usage 
+### Installation 
+The package can be installed by cloning this repo, then running the following command in the repo's root : 
+```
+pip install .
+```
+Optionally, you can add the `-e` flag if you would like to edit the package (since it might not fulfill your needs).
+
+### Examples 
+Some usage examples can be found in this repo under [examples](./examples/).
+
 
 ## Notes On Setup
 ### Physical Interface 
