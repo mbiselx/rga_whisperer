@@ -67,7 +67,6 @@ class Message(MessageBase, ABC):
     header: MessageHeader
     '''the header of the message. This is common to all messages'''
 
-    @abstractclassmethod
     @classmethod
     def parse(cls, header: 'Message.MessageHeader', parser: MessageParser):
         '''parse the raw data into a message'''
