@@ -21,6 +21,10 @@ Optionally, you can add the `-e` flag if you would like to edit the package (sin
 ### Examples 
 Some usage examples can be found in this repo under [examples](./examples/).
 
+The simplistic GUI allows the live visualization of the measurement values.
+
+| ![img](./imgs/plot.png) | The measured ion currents (y-axis in Amps) for different sampling masses (x-axis in atomic mass units). In white the average values, in red the instantaneous values. |
+|---|---|
 
 ## Notes On Setup
 ### Physical Interface 
