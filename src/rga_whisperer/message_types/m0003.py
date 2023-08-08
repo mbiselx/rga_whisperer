@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from .m0000 import Message, MessageParser
 
 __all__ = [
+    "UK_Request_1_Message",
+    "UK_Response_1_Message",
 ]
 
 
@@ -52,7 +54,9 @@ class UK_Response_1_Message(Message, type_code=0x00030101):
 
         @classmethod
         def parse(cls, parser: MessageParser):
-            _ = parser.get_bytes(4)  # null
+            error_code = parser.get_int()  # null
+            if error_code:  # TODO : This is bad
+                return cls(0, 0, 0)
             ref = parser.get_int()
             dtype = parser.get_int(2)
             _ = parser.get_bytes(2)  # ?

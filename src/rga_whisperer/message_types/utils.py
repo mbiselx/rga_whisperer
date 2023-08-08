@@ -71,3 +71,19 @@ class MessageParser:
         s = int.from_bytes(self.get_bytes(8), 'big', signed=True) * 1e-6
         ts = timedelta(seconds=s)
         return TIME_ORIGIN + ts
+
+
+class MessagePacker:
+
+    @classmethod
+    def make_int(cls, value: int, size: int = 4) -> bytes:
+        return int(value).to_bytes(size, 'big')
+
+    @classmethod
+    def make_str(cls, s: str) -> bytes:
+        b = cls.make_int(len(s)) + s.encode('ascii')
+
+        if pad := len(s) % 4:
+            return b + (4-pad) * b'\x00'
+        else:
+            return b

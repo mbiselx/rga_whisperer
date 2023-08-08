@@ -1,14 +1,15 @@
 """
 This submodule defines message classes with default behaviors.
 """
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractclassmethod
 from dataclasses import dataclass
 
-from .utils import MessageParser
+from .utils import MessageParser, MessagePacker
 
 __all__ = [
     "Message",
     "MessageParser",
+    "MessagePacker",
     "UnknownMessageType",
 ]
 
@@ -46,16 +47,22 @@ class MessageBase():
 class Message(MessageBase, ABC):
     @dataclass
     class MessageHeader:
-        length: int
-        id: int
-        object_ref: int
-        type_code: int
+        length: int = 16
+        id: int = 0
+        object_ref: int = 0
+        type_code: int = 0
 
         def is_response(self):
             return bool(self.type_code & 1)
 
         def is_request(self):
             return not self.is_response()
+
+        def pack(self) -> bytes:
+            return MessagePacker.make_int(self.length) + \
+                MessagePacker.make_int(self.id) + \
+                MessagePacker.make_int(self.object_ref) + \
+                MessagePacker.make_int(self.type_code)
 
     header: MessageHeader
     '''the header of the message. This is common to all messages'''
@@ -65,6 +72,19 @@ class Message(MessageBase, ABC):
         '''parse the raw data into a message'''
         raise NotImplementedError(
             f"{cls.__name__} has not implemented `parse`")
+
+    def pack_contents(self) -> bytes:
+        '''internal helper function for packing. should be overwritten by subclasses'''
+        raise NotImplementedError(
+            f"{self.__class__.__name__} has not implemented `pack_contents`")
+
+    def pack(self, id=None) -> bytes:
+        '''pack a message into bytes'''
+        packed_msg = self.pack_contents()
+        if id:
+            self.header.id = id
+        self.header.length = len(packed_msg) + 16
+        return self.header.pack() + packed_msg
 
 
 @dataclass
@@ -76,3 +96,6 @@ class UnknownMessageType(Message, type_code=0):
     def parse(cls, header: Message.MessageHeader, parser: MessageParser):
         '''we cannot parse this message'''
         return cls(header=header, data=parser.data)
+
+    def pack_contents(self) -> bytes:
+        return self.data
