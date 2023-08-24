@@ -52,18 +52,20 @@ def run():
                         isinstance(e.value, list):
                     gui.set_ydata(e.value)
                     break
-            time.sleep(.5)  # give the plot time to update
+            time.sleep(.1)  # give the plot time to update
+
+    print("done")
 
 
-# the main program loop
-with Thread(target=run, daemon=True) as thread:
+# the main program loop runs in a separate thread
+thread = Thread(target=run, daemon=True)
 
-    # start the GUI
-    gui.show()
+# start the GUI
+gui.show()
 
-    # start the pcap-reading thread
-    thread.start()
+# start the pcap-reading thread
+thread.start()
 
-    # this is the event loop, which is responsible for the GUI.
-    # it is run in the main thread
-    app.exec()
+# this is the event loop, which is responsible for the GUI.
+# it is run in the main thread
+app.exec()
